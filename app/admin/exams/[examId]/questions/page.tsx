@@ -3,14 +3,15 @@ import { requireAdmin } from "../../../../../lib/authServer";
 import { apiPost } from "../../../../../lib/api";
 import AdminUploadQuestionsForm from "../../../../../components/AdminUploadQuestionsForm";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function AdminQuestionsPage({
   params,
 }: {
-  params: { examId: string };
+  params: Promise<{ examId: string }>;
 }) {
   await requireAdmin();
-  const { examId } = params;
+  const { examId } = await params;
 
   async function uploadQuestions(formData: FormData) {
     "use server";
@@ -25,11 +26,11 @@ export default async function AdminQuestionsPage({
     } catch {
       throw new Error("Invalid JSON");
     }
-
     await apiPost(`/admin/exams/${examId}/questions`, {
       questions,
       openExam,
     });
+    redirect(`/admin/exams`);
   }
 
   return (

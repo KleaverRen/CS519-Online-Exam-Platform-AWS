@@ -90,20 +90,23 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
+        {/* RESULTS CARD (Updated) */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm p-5 flex flex-col justify-between">
           <div>
             <h2 className="text-lg font-semibold tracking-tight">
               View student results
             </h2>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-              (Optional) Hook this up later to view per-exam and per-student
-              results.
+              Review submission history and performance across all exams.
             </p>
           </div>
           <div className="mt-4">
-            <span className="inline-flex items-center rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-200">
-              Coming soon
-            </span>
+            <Link
+              href="/admin/results"
+              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+            >
+              Go to results
+            </Link>
           </div>
         </div>
       </div>

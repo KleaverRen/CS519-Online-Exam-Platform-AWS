@@ -2,7 +2,8 @@
 import { requireAdmin } from "../../../lib/authServer";
 import { apiGet, apiPost } from "../../../lib/api";
 import AdminCreateExamForm from "../../../components/AdminCreateExamForm";
-import Link from "next/link";
+import ExamsList from "../../../components/ExamsList";
+import { revalidatePath } from "next/cache";
 
 type AdminExam = {
   examId: string;
@@ -29,6 +30,7 @@ export default async function AdminExamsPage() {
       startTime,
       endTime,
     });
+    revalidatePath("/admin/exams");
   }
 
   let exams: AdminExam[] = [];
@@ -54,65 +56,7 @@ export default async function AdminExamsPage() {
         <AdminCreateExamForm action={createExam} />
 
         {/* Right: exams list */}
-        <div className="space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            Existing exams
-          </h2>
-
-          {exams.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-6 text-sm text-slate-600 dark:text-slate-300">
-              No exams yet. Create an exam using the form on the left.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {exams.map((exam) => (
-                <div
-                  key={exam.examId}
-                  className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 flex items-center justify-between gap-4 shadow-sm"
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                        {exam.examName || exam.examId}
-                      </p>
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium border ${
-                          exam.status === "OPEN"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-600"
-                            : exam.status === "DRAFT"
-                            ? "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600"
-                            : "bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-600"
-                        }`}
-                      >
-                        {exam.status ?? "Unknown"}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      ID: {exam.examId} ·{" "}
-                      {exam.durationMinutes
-                        ? `${exam.durationMinutes} minutes`
-                        : "Duration not set"}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/admin/exams/${exam.examId}/questions`}
-                      className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700"
-                    >
-                      Upload questions
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Tip: After uploading questions, make sure the exam status is set to{" "}
-            <span className="font-semibold">OPEN</span> so students can see it.
-          </p>
-        </div>
+        <ExamsList initialExams={exams} />
       </div>
     </div>
   );
