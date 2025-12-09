@@ -1,7 +1,11 @@
 import { getCurrentUser } from "../../lib/authServer";
 import { redirect } from "next/navigation";
 
-export default async function ExamsLayout({ children }) {
+export default async function ExamsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const user = await getCurrentUser();
   if (!user) redirect("/"); // must login
 
