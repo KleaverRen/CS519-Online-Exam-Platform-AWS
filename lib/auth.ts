@@ -1,5 +1,4 @@
 // lib/auth.ts
-import qs from "querystring";
 
 const domain = process.env.COGNITO_DOMAIN!;
 const clientId = process.env.COGNITO_CLIENT_ID!;
@@ -28,16 +27,14 @@ export function getHostedLogoutUrl() {
 export async function exchangeCodeForTokens(code: string) {
   const tokenUrl = `${domain}/oauth2/token`;
 
-  const body = qs.stringify({
+  const body = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: clientId,
     code,
     redirect_uri: redirectUri,
   });
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
+  const headers: HeadersInit = {};
 
   // If you use a client secret, use basic auth
   if (clientSecret) {
